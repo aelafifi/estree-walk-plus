@@ -1,7 +1,7 @@
 import type { Node } from "acorn";
 
 /**
- * StepInfo represents a step in the traversal of an ESTree.
+ * StepInfo represents a step in the traversal of an AST.
  * It contains the current node, its ancestor property name,
  * its index in the ancestor property (if property is an array),
  * and a reference to its ancestor StepInfo.

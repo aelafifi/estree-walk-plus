@@ -1,6 +1,6 @@
 import type { Node } from "acorn";
 import { VISIT_PROPS } from "./VisitProps";
-import { StepInfo } from "./stepInfo";
+import { StepInfo } from "./StepInfo";
 import { inBounds, outOfBounds } from "./helpers";
 
 /**
@@ -46,20 +46,20 @@ export interface BidirectionalAcornWalkOptions extends AcornWalkOptions {
  * Any change to the node (even if it's replaced entirely with a new object) will affect the tree,
  * TODO: BTW...
  *
- * @param algo {Direction} The direction of the traversal step (top-down or bottom-up).
+ * @param direction {Direction} The direction of the traversal step (top-down or bottom-up).
  * @param step {StepInfo} An object containing information about the current node and its ancestors (if `preserveParents` is true).
  * @param state {Object} A state object that is passed through the traversal, allowing you to maintain context or accumulate results.
  */
 export type FreeWalkCallback = (
-  algo: Direction,
+  direction: Direction,
   step: StepInfo,
   state: any,
 ) => void;
 
 /**
- * A flexible ESTree walker that allows custom callbacks for both top-down and bottom-up traversal.
+ * A flexible AST walker that allows custom callbacks for both top-down and bottom-up traversal.
  *
- * @param tree {Node} The root ESTree node to start the traversal from.
+ * @param tree {Node} The root AST node to start the traversal from.
  * @param callback {FreeWalkCallback} A function to be called at each node during traversal.
  * @param options {AcornWalkOptions} Options to configure the walker behavior.
  */
@@ -135,12 +135,12 @@ export function freeWalk(
 export type DirectionalWalkCallback = (step: StepInfo, state: any) => void;
 
 /**
- * A bidirectional ESTree walker that allows custom callbacks for both top-down and bottom-up traversal.
+ * A bidirectional AST walker that allows custom callbacks for both top-down and bottom-up traversal.
  * - The callbacks are specified in a single object, with keys prefixed to indicate the direction
  *     (which  can be customized via options, default prefixes are "enter_" for top-down and "leave_" for bottom-up).
  * - The rest of the key is the node type (e.g., "enter_FunctionDeclaration", "leave_VariableDeclaration").
  *
- * @param tree {Node} The root ESTree node to start the traversal from.
+ * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types (with prefixes) to callback functions.
  * @param options {BidirectionalAcornWalkOptions} Options to configure the walker behavior, including prefix customization.
  */
@@ -157,9 +157,9 @@ export function bidirectionalWalk(
 
   return freeWalk(
     tree,
-    (algo: Direction, step: StepInfo, state: any) => {
+    (direction: Direction, step: StepInfo, state: any) => {
       let fn;
-      switch (algo) {
+      switch (direction) {
         case Direction.TOP_DOWN:
           fn = callbacks[`${options.topDownPrefix}${step.node.type}`];
           if (fn) {
@@ -181,11 +181,11 @@ export function bidirectionalWalk(
 /**
  * Pre‑order traversal (visit parent before children); great for early pruning and context seeding.
  *
- * A top-down ESTree walker that allows custom callbacks for node types.
+ * A top-down AST walker that allows custom callbacks for node types.
  *
  * In the `callbacks` object, keys should be the node types (e.g., "FunctionDeclaration", "VariableDeclaration"),
  *
- * @param tree {Node} The root ESTree node to start the traversal from.
+ * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types to callback functions.
  * @param options {AcornWalkOptions} Options to configure the walker behavior.
  */
@@ -196,8 +196,8 @@ export function topDownWalk(
 ): Object {
   return freeWalk(
     tree,
-    (algo: Direction, step: StepInfo, state: any) => {
-      if (algo === Direction.TOP_DOWN) {
+    (direction: Direction, step: StepInfo, state: any) => {
+      if (direction === Direction.TOP_DOWN) {
         const fn = callbacks[step.node.type];
         if (fn) {
           fn(step, state);
@@ -211,11 +211,11 @@ export function topDownWalk(
 /**
  * Post‑order traversal (visit children before parent); ideal for aggregations and transforms.
  *
- * A bottom-up ESTree walker that allows custom callbacks for node types.
+ * A bottom-up AST walker that allows custom callbacks for node types.
  *
  * In the `callbacks` object, keys should be the node types (e.g., "FunctionDeclaration", "VariableDeclaration"),
  *
- * @param tree {Node} The root ESTree node to start the traversal from.
+ * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types to callback functions.
  * @param options {AcornWalkOptions} Options to configure the walker behavior.
  */
@@ -226,8 +226,8 @@ export function bottomUpWalk(
 ): Object {
   return freeWalk(
     tree,
-    (algo: Direction, step: StepInfo, state: any) => {
-      if (algo === Direction.BOTTOM_UP) {
+    (direction: Direction, step: StepInfo, state: any) => {
+      if (direction === Direction.BOTTOM_UP) {
         const fn = callbacks[step.node.type];
         if (fn) {
           fn(step, state);
