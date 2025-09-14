@@ -2,6 +2,12 @@ import type { Node } from "acorn";
 import { VISIT_PROPS } from "./VisitProps";
 import { StepInfo } from "./StepInfo";
 import { inBounds, outOfBounds } from "./helpers";
+import {
+  WalkOptions,
+  DirectionalWalkOptions,
+  DirectionalWalkCallback,
+  FreeWalkCallback,
+} from "./types";
 
 /**
  * Direction of the traversal step.
@@ -14,59 +20,16 @@ export enum Direction {
 }
 
 /**
- * Options for the `walk` function.
- * - `preserveParents`: Whether to maintain parent references (default: true).
- * - `start`: Start position for node traversal (default: undefined).
- * - `end`: End position for node traversal (default: undefined).
- * - `state`: An optional state object to be passed through the traversal (default: {}).
- */
-export interface AcornWalkOptions {
-  preserveParents?: boolean;
-  start?: number;
-  end?: number;
-  state?: Object;
-}
-
-/**
- * Options for the `bidirectionalWalk` function.
- * - `topDownPrefix`: Prefix for top-down callback keys (default: "enter_").
- * - `bottomUpPrefix`: Prefix for bottom-up callback keys (default: "leave_").
- *
- * These options extend `AcornWalkOptions`.
- * @see AcornWalkOptions
- */
-export interface BidirectionalAcornWalkOptions extends AcornWalkOptions {
-  topDownPrefix?: string;
-  bottomUpPrefix?: string;
-}
-
-/**
- * Callback function type for the `freeWalk` function.
- *
- * Any change to the node (even if it's replaced entirely with a new object) will affect the tree,
- * TODO: BTW...
- *
- * @param direction {Direction} The direction of the traversal step (top-down or bottom-up).
- * @param step {StepInfo} An object containing information about the current node and its ancestors (if `preserveParents` is true).
- * @param state {Object} A state object that is passed through the traversal, allowing you to maintain context or accumulate results.
- */
-export type FreeWalkCallback = (
-  direction: Direction,
-  step: StepInfo,
-  state: any,
-) => void;
-
-/**
  * A flexible AST walker that allows custom callbacks for both top-down and bottom-up traversal.
  *
  * @param tree {Node} The root AST node to start the traversal from.
  * @param callback {FreeWalkCallback} A function to be called at each node during traversal.
- * @param options {AcornWalkOptions} Options to configure the walker behavior.
+ * @param options {WalkOptions} Options to configure the walker behavior.
  */
 export function freeWalk(
   tree: Node,
   callback: FreeWalkCallback,
-  options: AcornWalkOptions = {},
+  options: WalkOptions = {},
 ): Object {
   options = {
     ...options,
@@ -127,14 +90,6 @@ export function freeWalk(
 }
 
 /**
- * Callback function type for directional walks (bidirectional, top-down, or bottom-up).
- *
- * @param step {StepInfo} An object containing information about the current node and its ancestors (if `preserveParents` is true).
- * @param state {Object} A state object that is passed through the traversal, allowing you to maintain context or accumulate results.
- */
-export type DirectionalWalkCallback = (step: StepInfo, state: any) => void;
-
-/**
  * A bidirectional AST walker that allows custom callbacks for both top-down and bottom-up traversal.
  * - The callbacks are specified in a single object, with keys prefixed to indicate the direction
  *     (which  can be customized via options, default prefixes are "enter_" for top-down and "leave_" for bottom-up).
@@ -142,12 +97,12 @@ export type DirectionalWalkCallback = (step: StepInfo, state: any) => void;
  *
  * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types (with prefixes) to callback functions.
- * @param options {BidirectionalAcornWalkOptions} Options to configure the walker behavior, including prefix customization.
+ * @param options {DirectionalWalkOptions} Options to configure the walker behavior, including prefix customization.
  */
 export function bidirectionalWalk(
   tree: Node,
   callbacks: Record<string, DirectionalWalkCallback>,
-  options: BidirectionalAcornWalkOptions = {},
+  options: DirectionalWalkOptions = {},
 ): Object {
   options = {
     ...options,
@@ -187,12 +142,12 @@ export function bidirectionalWalk(
  *
  * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types to callback functions.
- * @param options {AcornWalkOptions} Options to configure the walker behavior.
+ * @param options {WalkOptions} Options to configure the walker behavior.
  */
 export function topDownWalk(
   tree: Node,
   callbacks: Record<string, DirectionalWalkCallback>,
-  options: AcornWalkOptions = {},
+  options: WalkOptions = {},
 ): Object {
   return freeWalk(
     tree,
@@ -217,12 +172,12 @@ export function topDownWalk(
  *
  * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types to callback functions.
- * @param options {AcornWalkOptions} Options to configure the walker behavior.
+ * @param options {WalkOptions} Options to configure the walker behavior.
  */
 export function bottomUpWalk(
   tree: Node,
   callbacks: Record<string, DirectionalWalkCallback>,
-  options: AcornWalkOptions = {},
+  options: WalkOptions = {},
 ): Object {
   return freeWalk(
     tree,
