@@ -21,7 +21,7 @@ type FreeWalkCallback = (
 
 ## Parameters
 
-- `direction`: [`Direction`](./DIRECTION.ms) — Indicates whether the current node is being visited in a
+- `direction`: [`Direction`](./ENUMS.md) — Indicates whether the current node is being visited in a
   top-down (`Direction.TOP_DOWN`) or bottom-up (`Direction.BOTTOM_UP`) manner.
 - `step`: [`StepInfo`](./STEP_INFO.md) — An object containing information about the current node, its ancestors.
 - `state`: `Object` — A mutable state object that is passed through the entire traversal. You can use it to accumulate
