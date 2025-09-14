@@ -17,8 +17,8 @@ import type { Node } from "acorn";
  */
 export function outOfBounds(node: Node, start?: number, end?: number) {
   return (
-    (start !== undefined && node.end <= start) ||
-    (end !== undefined && node.start >= end)
+    (start !== undefined && node.start !== undefined && node.end <= start) ||
+    (end !== undefined && node.end !== undefined && node.start >= end)
   );
 }
 
@@ -35,7 +35,7 @@ export function outOfBounds(node: Node, start?: number, end?: number) {
  */
 export function inBounds(node: Node, start?: number, end?: number) {
   return (
-    (start === undefined || node.start >= start) &&
-    (end === undefined || node.end <= end)
+    (start === undefined || node.start === undefined || node.start >= start) &&
+    (end === undefined || node.end === undefined || node.end <= end)
   );
 }
