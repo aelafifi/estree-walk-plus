@@ -65,7 +65,7 @@ export function freeWalk(
 
     // Top-down callback
     if (inBounds(stepInfo.node, options.start, options.end)) {
-      callback(Direction.TOP_DOWN, stepInfo, options.state);
+      callback(Direction.TOP_DOWN, stepInfo, options.state as Object);
     }
 
     // Visit children
@@ -82,7 +82,7 @@ export function freeWalk(
 
     // Bottom-up callback
     if (inBounds(stepInfo.node, options.start, options.end)) {
-      callback(Direction.BOTTOM_UP, stepInfo, options.state);
+      callback(Direction.BOTTOM_UP, stepInfo, options.state as Object);
     }
   })(tree, null, undefined, undefined);
 
@@ -112,7 +112,7 @@ export function bidirectionalWalk(
 
   return freeWalk(
     tree,
-    (direction: Direction, step: StepInfo, state: any) => {
+    (direction: Direction, step: StepInfo, state: Object) => {
       let fn;
       switch (direction) {
         case Direction.TOP_DOWN:
@@ -151,7 +151,7 @@ export function topDownWalk(
 ): Object {
   return freeWalk(
     tree,
-    (direction: Direction, step: StepInfo, state: any) => {
+    (direction: Direction, step: StepInfo, state: Object) => {
       if (direction === Direction.TOP_DOWN) {
         const fn = callbacks[step.node.type];
         if (fn) {
@@ -181,7 +181,7 @@ export function bottomUpWalk(
 ): Object {
   return freeWalk(
     tree,
-    (direction: Direction, step: StepInfo, state: any) => {
+    (direction: Direction, step: StepInfo, state: Object) => {
       if (direction === Direction.BOTTOM_UP) {
         const fn = callbacks[step.node.type];
         if (fn) {
