@@ -137,4 +137,70 @@ bottomUpWalk(ast, {
 });
 ```
 
-[//]: # (TODO: add some examples)
+## More Examples
+
+### Using `nearestOfType` to find ancestor context
+
+```typescript
+import {topDownWalk} from "estree-walk-plus";
+
+topDownWalk(ast, {
+    Identifier(step, state) {
+        // Find the nearest function declaration or expression
+        const functionContext = step.nearestOfType("FunctionDeclaration") || 
+                              step.nearestOfType("FunctionExpression");
+        
+        if (functionContext) {
+            console.log(`Identifier "${step.node.name}" found in function "${functionContext.node.id?.name || 'anonymous'}"`);
+        }
+    }
+});
+```
+
+### Using `descending` and `ascending` properties
+
+```typescript
+import {freeWalk, Direction} from "estree-walk-plus";
+
+freeWalk(ast, (direction, step, state) => {
+    if (direction === Direction.TOP_DOWN && step.node.type === "Identifier") {
+        // Get all ancestors from current node to root
+        const pathToRoot = step.descending.map(s => s.node.type);
+        console.log("Path to root:", pathToRoot.join(" -> "));
+        
+        // Get all ancestors from root to current node  
+        const pathFromRoot = step.ascending.map(s => s.node.type);
+        console.log("Path from root:", pathFromRoot.join(" -> "));
+    }
+});
+```
+
+### Using `replaceWith` (with caution)
+
+```typescript
+import {topDownWalk} from "estree-walk-plus";
+
+topDownWalk(ast, {
+    Literal(step, state) {
+        // Replace string literals with template literals (example transformation)
+        if (typeof step.node.value === "string") {
+            const templateLiteral = {
+                type: "TemplateLiteral",
+                expressions: [],
+                quasis: [{
+                    type: "TemplateElement",
+                    value: { raw: step.node.value, cooked: step.node.value },
+                    tail: true
+                }]
+            };
+            
+            try {
+                step.replaceWith(templateLiteral);
+                console.log("Replaced string literal with template literal");
+            } catch (error) {
+                console.error("Cannot replace root node");
+            }
+        }
+    }
+});
+```
