@@ -14,10 +14,10 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build:tsc": "tsc",
-    "build:types": "tsc --emitDeclarationOnly --declaration --outDir ./build",
+    "build:ts": "tsc",
     "build:node": "esbuild ./src/index.ts --bundle --outfile=./build/index.js --platform=node --format=cjs",
-    "build": "npm run build:tsc && npm run build:types && npm run build:node",
+    "build:types": "tsc --emitDeclarationOnly --declaration --outDir ./build",
+    "build": "npm run build:ts && npm run build:node && npm run build:types",
     "prepublish": "npm run build"
   },
   "dependencies": {
