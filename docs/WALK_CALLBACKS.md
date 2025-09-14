@@ -33,7 +33,7 @@ type FreeWalkCallback = (
 
 ---
 
-# `type BidirectionalWalkCallback`
+# `type DirectionalWalkCallback`
 
 **Used for:** [`bidirectionalWalk`](./BIDIRECTIONAL_WALK.md), [`topDownWalk`](./TOP_DOWN_WALK.md),
 and [`bottomUpWalk`](./BOTTOM_UP_WALK.md)
@@ -54,7 +54,7 @@ any state changes should be made directly to the `state` object.
 ## Signature
 
 ```typescript
-type BidirectionalWalkCallback = (
+type DirectionalWalkCallback = (
     step: StepInfo,
     state: Object
 ) => void;
