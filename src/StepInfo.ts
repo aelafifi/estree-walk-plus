@@ -25,6 +25,10 @@ export class StepInfo {
     public ancestor?: StepInfo,
   ) {}
 
+  get _node(): any {
+    return this.node;
+  }
+
   get descending() {
     const ancestors: StepInfo[] = [];
     let current: StepInfo | undefined = this;
