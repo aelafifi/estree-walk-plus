@@ -122,22 +122,62 @@ and/or `options.end`.
 
 In general, using `replaceWith` is a bad idea, unless you really know what you are exactly doing.
 
-## Example
+## Examples
+
+### Using `ancestor` to access parent context
 
 ```typescript
-import {bottomUpWalk} from "estree-walk-plus";
+import acorn from "acorn";
+import { bottomUpWalk } from "estree-walk-plus";
 
-// Assuming you already have an ESTree-compatible AST
-bottomUpWalk(ast, {
-    Identifier(step, state) {
-        if (step.ancestor!.node.type === "VariableDeclarator") {
-            console.log("New variable declared:", step.node.name);
-        }
-    }
-});
+const code = `
+const x = 12;
+let y;
+
+for (let i = 0; i < 10; i++) {
+    let z = i * 2;
+}
+`;
+
+const ast = acorn.parse(code, { ecmaVersion: "latest" });
+
+const finalState = bottomUpWalk(
+    ast,
+    {
+        Identifier(step, state) {
+            if (step.ancestor?.node.type === "VariableDeclarator") {
+                const declarator = step.ancestor!;
+                const declaration = declarator.ancestor!;
+
+                state.vars[step.node.name] = {
+                    kind: declaration.node.kind,
+                    initValue: declarator.node.init
+                        ? declarator.node.init.type == "Literal"
+                            ? declarator.node.init.value
+                            : "[Complex Value]"
+                        : undefined,
+                };
+            }
+        },
+    },
+    {
+        state: {
+            vars: {},
+        },
+    },
+);
+
+console.log(finalState);
+// Output:
+// {
+//     vars: {
+//         x: { kind: 'const', initValue: 12 },
+//         y: { kind: 'let', initValue: undefined },
+//         i: { kind: 'let', initValue: 0 },
+//         z: { kind: 'let', initValue: '[Complex Value]' }
+//     }
+// }
 ```
-
-## More Examples
 
 ### Using `nearestOfType` to find ancestor context
 

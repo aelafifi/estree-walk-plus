@@ -1,6 +1,7 @@
 # `interface WalkOptions`
 
-**Used for:** [`freeWalk`](./FREE_WALK.md)
+**Used for:** [`freeWalk`](./FREE_WALK.md), [`topDownWalk`](./TOP_DOWN_WALK.md),
+and [`bottomUpWalk`](./BOTTOM_UP_WALK.md)
 
 ## Signature
 
@@ -42,12 +43,13 @@ interface WalkOptions {
 
 ```typescript
 interface BidirectionalWalkOptions extends WalkOptions {
-  topDownPrefix?: string;
-  bottomUpPrefix?: string;
+    topDownPrefix?: string;
+    bottomUpPrefix?: string;
 }
 ```
 
 ## Properties
+
 - `topDownPrefix`: `string` — The prefix to use for top-down callback keys.
     - Default: `"enter_"`
     - This allows you to customize the naming convention for top-down callbacks in the callback object.
