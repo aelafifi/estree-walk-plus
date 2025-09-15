@@ -4,7 +4,7 @@ import { StepInfo } from "./StepInfo";
 import { inBounds, outOfBounds } from "./helpers";
 import {
   WalkOptions,
-  DirectionalWalkOptions,
+  BidirectionalWalkOptions,
   DirectionalWalkCallback,
   FreeWalkCallback,
 } from "./types";
@@ -97,12 +97,12 @@ export function freeWalk(
  *
  * @param tree {Node} The root AST node to start the traversal from.
  * @param callbacks {Record<string, DirectionalWalkCallback>} An object mapping node types (with prefixes) to callback functions.
- * @param options {DirectionalWalkOptions} Options to configure the walker behavior, including prefix customization.
+ * @param options {BidirectionalWalkOptions} Options to configure the walker behavior, including prefix customization.
  */
 export function bidirectionalWalk(
   tree: Node,
   callbacks: Record<string, DirectionalWalkCallback>,
-  options: DirectionalWalkOptions = {},
+  options: BidirectionalWalkOptions = {},
 ): Object {
   options = {
     ...options,

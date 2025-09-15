@@ -23,7 +23,7 @@ export interface WalkOptions {
  * These options extend `WalkOptions`.
  * @see WalkOptions
  */
-export interface DirectionalWalkOptions extends WalkOptions {
+export interface BidirectionalWalkOptions extends WalkOptions {
   topDownPrefix?: string;
   bottomUpPrefix?: string;
 }

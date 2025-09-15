@@ -36,8 +36,7 @@ interface WalkOptions {
 
 # `interface BidirectionalWalkOptions extends WalkOptions`
 
-**Used for:** [`bidirectionalWalk`](./BIDIRECTIONAL_WALK.md), [`topDownWalk`](./TOP_DOWN_WALK.md),
-and [`bottomUpWalk`](./BOTTOM_UP_WALK.md)
+**Used for:** [`bidirectionalWalk`](./BIDIRECTIONAL_WALK.md)
 
 ## Signature
 
