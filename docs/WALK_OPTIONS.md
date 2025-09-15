@@ -34,15 +34,14 @@ interface WalkOptions {
 
 ---
 
-# `interface DirectionalWalkOptions extends WalkOptions`
+# `interface BidirectionalWalkOptions extends WalkOptions`
 
-**Used for:** [`bidirectionalWalk`](./BIDIRECTIONAL_WALK.md), [`topDownWalk`](./TOP_DOWN_WALK.md),
-and [`bottomUpWalk`](./BOTTOM_UP_WALK.md)
+**Used for:** [`bidirectionalWalk`](./BIDIRECTIONAL_WALK.md)
 
 ## Signature
 
 ```typescript
-interface DirectionalWalkOptions extends WalkOptions {
+interface BidirectionalWalkOptions extends WalkOptions {
   topDownPrefix?: string;
   bottomUpPrefix?: string;
 }

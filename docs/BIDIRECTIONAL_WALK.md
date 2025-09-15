@@ -10,7 +10,7 @@ The rest of the key is the node type (e.g., "enter_FunctionDeclaration", "leave_
 
 - `tree`: `acorn.Node` — The root AST node to start the traversal from.
 - `callbacks`: `Record<string, DirectionalWalkCallback>` — An object mapping node types (with prefixes) to callback functions.
-- `options`: [`DirectionalWalkOptions`](./WALK_OPTIONS.md) — Options to configure the walker behavior, including prefix customization.
+- `options`: [`BidirectionalWalkOptions`](./WALK_OPTIONS.md) — Options to configure the walker behavior, including prefix customization.
 
 ## Returns
 
