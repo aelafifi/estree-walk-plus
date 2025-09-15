@@ -128,4 +128,29 @@ describe('freeWalk', () => {
     // Should visit same number of nodes in both directions
     expect(topDownOrder.length).toBe(bottomUpOrder.length);
   });
+
+  it('should handle invalid nodes gracefully', () => {
+    const visited: string[] = [];
+    
+    // Test with various invalid node inputs that should be skipped
+    const testCases = [
+      null,
+      undefined,
+      {},  // Object without type property
+      'string',  // Non-object
+      42,  // Number
+      { notType: 'test' }  // Object without type property
+    ];
+
+    testCases.forEach(invalidNode => {
+      expect(() => {
+        freeWalk(invalidNode as any, (direction, step, state) => {
+          visited.push(step.node.type);
+        });
+      }).not.toThrow();
+    });
+
+    // No valid nodes should have been visited
+    expect(visited).toHaveLength(0);
+  });
 });
