@@ -26,6 +26,7 @@ export const VISIT_PROPS: Record<string, string[]> = {
   ObjectExpression: ["properties"],
   Property: ["key", "value"],
   FunctionExpression: ["id", "params", "body"],
+  ArrowFunctionExpression: ["id", "params", "body"],
   UnaryExpression: ["argument"],
   UpdateExpression: ["argument"],
   BinaryExpression: ["left", "right"],
